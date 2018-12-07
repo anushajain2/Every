@@ -1,7 +1,7 @@
 pragma solidity ^0.4.17;
 
 contract SimpleStorage {
-  uint count;
+  uint256 public count;
 
   function set(uint x) public {
     count = x;
@@ -9,11 +9,11 @@ contract SimpleStorage {
 
   function increment() public view returns (uint) {
     count = count + 1;
-    return count
+    return count;
   }
 
 
   function get() public view returns (uint) {
-    return count;
+    return 18;
   }
 }
