@@ -15,15 +15,17 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
+    var simpleStorageInstance;
     SimpleStorage.setProvider(provider);
     SimpleStorage.deployed().then(function(instance) {
-      console.log(instance);
-      var simpleStorageInstance = instance;
+      simpleStorageInstance = instance;
 
-      return simpleStorageInstance.increment();
-    }).then((count) => {
-      console.log(count.s);
-      this.setState({ countNumber: count.s })
+      return simpleStorageInstance.get();
+      }).then((count) => {
+        console.log(count.toString());
+        this.setState({ countNumber: count.toString() })
+      }).catch(function(err) {
+          console.log(err.message);
     });
   }
 
