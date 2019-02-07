@@ -2,25 +2,47 @@ import React, { Component } from 'react'
 import Web3 from 'web3'
 var provider = new Web3.providers.HttpProvider("http://localhost:9545");
 var contract = require("truffle-contract");
-var contractJson = require("/Users/anushajain/Documents/Every/build/contracts/SimpleStorage.json");
-var SimpleStorage = contract(contractJson);
+// var contractJson = require('../../../build/contracts/SimpleStorage.json');
+// var SimpleStorage = contract(contractJson);
+// var simpleStorageInstance;
+// SimpleStorage.setProvider(provider);
+
+var contractJson = require('../../../build/contracts/ERC20Basic.json');
+var ERCtoken = contract(contractJson);
+var ERCtokenInstance;
+ERCtoken.setProvider(provider);
 
 class Dashboard extends Component {
   constructor(props, { authData }) {
     super(props)
     authData = this.props
     this.state = {
-      countNumber: 0
+      countNumber: 12
     }
+
+    this.incrementFunc = this.incrementFunc.bind(this)
   }
 
-  componentDidMount() {
-    var simpleStorageInstance;
-    SimpleStorage.setProvider(provider);
-    SimpleStorage.deployed().then(function(instance) {
-      simpleStorageInstance = instance;
+  // componentDidMount() {
+  //   SimpleStorage.deployed().then(function(instance) {
+  //     simpleStorageInstance = instance;
+  //
+  //     return simpleStorageInstance.get()
+  //     }).then((count) => {
+  //       console.log(count.toString());
+  //       this.setState({ countNumber: count.toString() })
+  //     }).catch(function(err) {
+  //         console.log(err.message);
+  //   });
+  // }
 
-      return simpleStorageInstance.get();
+  componentDidMount() {
+    ERCtoken.deployed().then(function(instance) {
+      ERCtokenInstance = instance;
+      console.log("I am " + ERCtokenInstance.address);
+      ERCtokenInstance.transfer(ERCtokenInstance.address, "2");
+
+      return ERCtokenInstance.balanceOf(0x6330a553fc93768f612722bb8c2ec78ac90b3bbc)
       }).then((count) => {
         console.log(count.toString());
         this.setState({ countNumber: count.toString() })
@@ -29,28 +51,19 @@ class Dashboard extends Component {
     });
   }
 
-  // updateState() {
-  //
-  //   console.log(this.state.ContractInstance);
-  //   this.state.ContractInstance.count((err, result) => {
-  //     if(result!= null){
-  //       this.setState({
-  //         count: result
-  //       })
-  //     }
-  //   });
-
+  incrementFunc() {
+    console.log("func working");
     // SimpleStorage.deployed().then(function(instance) {
-    //      var simpleStorageInstance = instance;
-    //      console.log("trans");
-    //    })
-    //   .then(function(result) {
-    //     // If this callback is called, the transaction was successfully processed.
-    //     console.log("Transaction successful!")
-    //   })
-    //   .catch(function(e) {
-    //     // There was an error! Handle it.
-    //   });
+    //   simpleStorageInstance = instance;
+    //
+    //   return simpleStorageInstance.increment()
+    //   }).then((count) => {
+    //     console.log(count.toString());
+    //     this.setState({ countNumber: count.toString() })
+    //   }).catch(function(err) {
+    //       console.log(err.message);
+    // });
+  }
 
   render() {
     return(
@@ -60,6 +73,7 @@ class Dashboard extends Component {
             <h1>Dashboard</h1>
             <p><strong>Congratulations {this.props.authData.name}!</strong> If you're seeing this page, you've logged in with UPort successfully.</p>
             <p> Count is {this.state.countNumber} </p>
+            <button onClick={this.incrementFunc}> Click Me! </button>
           </div>
         </div>
       </main>
